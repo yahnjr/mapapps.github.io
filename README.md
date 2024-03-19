@@ -41,14 +41,41 @@
             background-color: #333; /* Darken the selected button */
             color: #fff; /* Set text color to white */
         }
+        /* Tooltip container */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -60px;
+        }
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="type-buttons">
-    <button class="type-button" onclick="setType('Housing')">🏡</button>
-    <button class="type-button" onclick="setType('Infrastructure')">🏭</button>
-    <button class="type-button" onclick="setType('Transportation')">🚎</button>
+    <div class="tooltip"><button class="type-button" onclick="setType('Housing')">🏡<span class="tooltiptext">Housing</span></button></div>
+    <div class="tooltip"><button class="type-button" onclick="setType('Infrastructure')">🏭<span class="tooltiptext">Infrastructure</span></button></div>
+    <div class="tooltip"><button class="type-button" onclick="setType('Transportation')">🚎<span class="tooltiptext">Transportation</span></button></div>
+    <div class="tooltip"><button class="type-button" onclick="setType('Employment')">💼<span class="tooltiptext">Employment</span></button></div>
+    <div class="tooltip"><button class="type-button" onclick="setType('Parks & Nature')">🌳<span class="tooltiptext">Parks & Nature</span></button></div>
 </div>
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiaWFubWFoZXIzaiIsImEiOiJjbHRnM2g3Mmgwdm50MmpxcjNiaHppcGF0In0.EDCKHSTyRqogqjRVwC5pJA';
@@ -58,6 +85,7 @@
         style: 'mapbox://styles/ianmaher3j/cltxk9cdn01ij01r53gz169jm',
         center: [-121.50527954101562, 43.66847610473633],
         zoom: 12,
+        doubleClickZoom: false // Disable zoom on double click
     });
 
     let selectedType = 'Housing'; // Default type
@@ -96,7 +124,11 @@
             case 'Infrastructure':
                 return '#3498DB'; // Blue
             case 'Transportation':
-                return '#27AE60'; // Green
+                return '#FB7105'; // Orange
+            case 'Employment':
+                return '#800080'; // Purple
+            case 'Parks & Nature':
+                return '#00FF00'; // Bright Green
             default:
                 return '#000'; // Default black
         }
@@ -104,12 +136,6 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
 
 
 
