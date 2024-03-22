@@ -1,59 +1,49 @@
-body {
+#viewDiv {
+    height: 1000px; /* Set your desired height */
+    width: 100%; /* Adjust width as needed */
     margin: 0;
     padding: 0;
-}
-#map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-}
-.type-buttons {
+  }
+  
+  .topic-buttons {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 1;
-}
-.type-button {
-    width: 40px;
-    height: 40px;
-    background-color: #f0f0f0;
-    border: none;
-    cursor: pointer;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease; /* Add transition effect */
-}
-.type-button:hover {
-    background-color: #ddd;
-}
-.selected {
-    background-color: #333; /* Darken the selected button */
-    color: #fff; /* Set text color to white */
-}
-/* Tooltip container */
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-/* Tooltip text */
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -60px;
-}
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-}
+    flex-direction: column; /* Buttons stacked vertically */
+  }
+  
+  .topic-button {
+    margin-bottom: 5px; /* Add spacing between buttons */
+    padding: 5px 10px; /* Add some padding for better look */
+    cursor: pointer;
+    background-color: #eee; /* Default button color */
+    border: 1px solid #ddd; /* Button border */
+  }
+  
+  .topic-button.selected-topic {
+    background-color: #ddd; /* Slightly darker for selected button */
+  }
+  
+  /* Updated styling for the circles */
+  .esri-geometry-point {
+    outline: none; /* Remove outlines */
+    width: 5px; /* Make circles smaller */
+    height: 5px; /* Make circles smaller */
+  }
+  
+  /* Updated styling for shrinking point symbols */
+  @media (max-width: 600px) {
+    .esri-geometry-point {
+      width: 3px; /* Shrink circles when zoomed out */
+      height: 3px; /* Shrink circles when zoomed out */
+    }
+  }
+  
+  /* Updated styling for the polygon layer */
+  .esri-geometry-polygon {
+    outline: red; /* Red outline */
+    fill: blue; /* Blue fill color */
+    fill-opacity: 0; /* 100% transparent */
+  }
+  
