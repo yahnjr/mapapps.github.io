@@ -52,6 +52,12 @@
       z-index: 1; /* Ensure it's above the map */
       max-width: 300px; /* Make it narrower */
       height: 200px; /* Make it taller */
+      font-size: 11px;
+    }
+    
+    @media only screen and (min-width: 768px) {
+    .welcome-box {
+      font-size: 16px; /* Larger font size for computer screens */
     }
 
     .close-button {
@@ -59,6 +65,7 @@
       top: 5px;
       right: 5px;
       cursor: pointer;
+      font-size: 20px;
     }
 
     .info-button {
@@ -78,11 +85,11 @@
     </div>
   </div>
   <div class="topic-buttons">
-    <div class="topic-button" id="housing">Housing</div>
-    <div class="topic-button" id="infrastructure">Infrastructure</div>
-    <div class="topic-button" id="transportation">Transportation</div>
-    <div class="topic-button" id="parks">Parks & Nature</div>
-    <div class="topic-button" id="employment">Employment</div>
+    <div class="topic-button" id="housing">🟨 Housing</div>
+    <div class="topic-button" id="infrastructure">🟪 Infrastructure</div>
+    <div class="topic-button" id="transportation">🟦 Transportation</div>
+    <div class="topic-button" id="parks">🟩 Parks & Nature</div>
+    <div class="topic-button" id="employment">🟥 Employment</div>
   </div>
   <script>
     require([
