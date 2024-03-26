@@ -1,49 +1,60 @@
 #viewDiv {
-    height: 1000px; /* Set your desired height */
-    width: 100%; /* Adjust width as needed */
-    margin: 0;
-    padding: 0;
-  }
-  
-  .topic-buttons {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    flex-direction: column; /* Buttons stacked vertically */
-  }
-  
-  .topic-button {
-    margin-bottom: 5px; /* Add spacing between buttons */
-    padding: 5px 10px; /* Add some padding for better look */
-    cursor: pointer;
-    background-color: #eee; /* Default button color */
-    border: 1px solid #ddd; /* Button border */
-  }
-  
-  .topic-button.selected-topic {
-    background-color: #ddd; /* Slightly darker for selected button */
-  }
-  
-  /* Updated styling for the circles */
-  .esri-geometry-point {
-    outline: none; /* Remove outlines */
-    width: 5px; /* Make circles smaller */
-    height: 5px; /* Make circles smaller */
-  }
-  
-  /* Updated styling for shrinking point symbols */
-  @media (max-width: 600px) {
-    .esri-geometry-point {
-      width: 3px; /* Shrink circles when zoomed out */
-      height: 3px; /* Shrink circles when zoomed out */
-    }
-  }
-  
-  /* Updated styling for the polygon layer */
-  .esri-geometry-polygon {
-    outline: red; /* Red outline */
-    fill: blue; /* Blue fill color */
-    fill-opacity: 0; /* 100% transparent */
-  }
-  
+  height: 800px; /* Set your desired height */
+  width: 100%; /* Adjust width as needed */
+  margin: 0;
+  padding: 0;
+  position: relative; /* Added position relative */
+}
+
+.topic-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column; /* Buttons stacked vertically */
+}
+
+.topic-button {
+  margin-bottom: 5px; /* Add spacing between buttons */
+  padding: 5px 10px; /* Add some padding for better look */
+  cursor: pointer;
+  background-color: #eee; /* Default button color */
+  border: 1px solid #ddd; /* Button border */
+}
+
+.topic-button.selected-topic {
+  background-color: #ddd; /* Slightly darker for selected button */
+}
+
+/* Updated styling for the circles */
+.esri-geometry-point {
+  outline: none; /* Remove outlines */
+  width: 5px; /* Make circles smaller */
+  height: 5px; /* Make circles smaller */
+}
+
+.welcome-box {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  z-index: 1; /* Ensure it's above the map */
+  max-width: 300px; /* Make it narrower */
+  height: 200px; /* Make it taller */
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.info-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}

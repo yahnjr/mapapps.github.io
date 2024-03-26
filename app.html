@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>Add Points to Feature Layer</title>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.24/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
   <style>
     #viewDiv {
-      height: 800px; /* Set your desired height */
+      height: 80vh; /* Set your desired height */
       width: 100%; /* Adjust width as needed */
       margin: 0;
       padding: 0;
@@ -44,8 +44,8 @@
 
     .welcome-box {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 50%;
+      left: 50%;
       background-color: white;
       padding: 10px;
       border: 1px solid #ddd;
@@ -93,8 +93,10 @@
       "esri/symbols/SimpleMarkerSymbol",
       "esri/renderers/UniqueValueRenderer", // Added UniqueValueRenderer
       "esri/symbols/SimpleFillSymbol", // Added SimpleFillSymbol
-      "esri/PopupTemplate"
-    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, SimpleFillSymbol, PopupTemplate) {
+      "esri/PopupTemplate",
+      "esri/widgets/BasemapToggle",
+      "esri/Basemap"
+    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, SimpleFillSymbol, PopupTemplate, BasemapToggle, Basemap) {
       var map = new Map({
         basemap: "topo-vector"
       });
@@ -255,7 +257,17 @@
 
       // Set the popup template for the feature layer
       featureLayer.popupTemplate = popupTemplate;
-    });
+    
+      view.popup.collapseEnabled = false;
+      
+      var toggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "satellite"  // Use the "satellite" basemap
+      });
+
+      view.ui.add(toggle, "bottom-left");
+});
+    
   </script>
 </body>
 </html>
