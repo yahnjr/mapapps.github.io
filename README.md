@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>Add Points to Feature Layer</title>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.24/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
   <style>
     #viewDiv {
-      height: 800px; /* Set your desired height */
+      height: 80vh; /* Set your desired height */
       width: 100%; /* Adjust width as needed */
       margin: 0;
       padding: 0;
+      position: relative; /* Added position relative */
     }
 
     .topic-buttons {
@@ -41,30 +42,54 @@
       height: 5px; /* Make circles smaller */
     }
 
-    /* Updated styling for shrinking point symbols */
-    @media (max-width: 600px) {
-      .esri-geometry-point {
-        width: 3px; /* Shrink circles when zoomed out */
-        height: 3px; /* Shrink circles when zoomed out */
-      }
+    .welcome-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ddd;
+      z-index: 1; /* Ensure it's above the map */
+      max-width: 300px; /* Make it narrower */
+      height: 200px; /* Make it taller */
+      font-size: 11px;
+    }
+    
+    @media only screen and (min-width: 768px) {
+    .welcome-box {
+      font-size: 16px; /* Larger font size for computer screens */
     }
 
-    /* Updated styling for the polygon layer */
-    .esri-geometry-polygon {
-      outline: red; /* Red outline */
-      fill: blue; /* Blue fill color */
-      fill-opacity: 0; /* 100% transparent */
+    .close-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+      font-size: 20px;
     }
+
+    .info-button {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
-  <div id="viewDiv"></div>
+  <div id="viewDiv">
+    <div class="welcome-box">
+      <p>Welcome! Please select a topic from the top right and double-click anywhere on the map to add a comment of your own. Click any other comment to view the contents. Multiple comments are welcome!</p>
+      <span class="close-button" onclick="document.querySelector('.welcome-box').style.display = 'none'">x</span>
+    </div>
+  </div>
   <div class="topic-buttons">
-    <div class="topic-button" id="housing">Housing</div>
-    <div class="topic-button" id="infrastructure">Infrastructure</div>
-    <div class="topic-button" id="transportation">Transportation</div>
-    <div class="topic-button" id="parks">Parks & Nature</div>
-    <div class="topic-button" id="employment">Employment</div>
+    <div class="topic-button" id="housing">🟨 Housing</div>
+    <div class="topic-button" id="infrastructure">🟪 Infrastructure</div>
+    <div class="topic-button" id="transportation">🟦 Transportation</div>
+    <div class="topic-button" id="parks">🟩 Parks & Nature</div>
+    <div class="topic-button" id="employment">🟥 Employment</div>
   </div>
   <script>
     require([
@@ -75,8 +100,10 @@
       "esri/symbols/SimpleMarkerSymbol",
       "esri/renderers/UniqueValueRenderer", // Added UniqueValueRenderer
       "esri/symbols/SimpleFillSymbol", // Added SimpleFillSymbol
-      "esri/PopupTemplate"
-    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, SimpleFillSymbol, PopupTemplate) {
+      "esri/PopupTemplate",
+      "esri/widgets/BasemapToggle",
+      "esri/Basemap"
+    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, SimpleFillSymbol, PopupTemplate, BasemapToggle, Basemap) {
       var map = new Map({
         basemap: "topo-vector"
       });
@@ -84,8 +111,8 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [-121.5036, 43.6708], // Center on La Pine, Oregon
-        zoom: 12 // Adjust zoom level as needed
+        center: [-121.48747267724718, 43.690269822296436], // Center on La Pine, Oregon
+        zoom: 13 // Adjust zoom level as needed
       });
 
       // Placeholder feature layer URL (replace with your actual layer)
@@ -108,33 +135,48 @@
         uniqueValueInfos: [ // Define unique values and symbols
           {
             value: "Housing",
-            symbol: new SimpleMarkerSymbol({
-              color: "blue"
-            })
+            symbol: {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              size: 10,
+              color: [255, 255, 31], //yellow
+              outline: null
+            }
           },
           {
             value: "Infrastructure",
-            symbol: new SimpleMarkerSymbol({
-              color: "red"
-            })
+            symbol: {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              size: 10,
+              color: [141, 66, 185], // purple
+              outline: null
+            }
           },
           {
             value: "Transportation",
-            symbol: new SimpleMarkerSymbol({
-              color: "green"
-            })
+            symbol: {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              size: 10,
+              color: [69, 151, 205], //blue
+              outline: null
+            }
           },
           {
             value: "Parks",
-            symbol: new SimpleMarkerSymbol({
-              color: "orange"
-            })
+            symbol: {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              size: 10,
+              color: [69, 199, 86], // green
+              outline: null
+            }
           },
           {
             value: "Employment",
-            symbol: new SimpleMarkerSymbol({
-              color: "purple"
-            })
+            symbol: {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              size: 10,
+              color: [193, 66, 104], //red
+              outline: null
+            }
           }
         ]
       });
@@ -163,7 +205,7 @@
       map.add(polygonLayer);
 
       // Listen for double-click event
-      view.bind("double-click", function(event) {
+      view.on("double-click", function(event) {
         event.stopPropagation();
         // Create a new point graphic at the clicked location
         var point = {
@@ -222,7 +264,17 @@
 
       // Set the popup template for the feature layer
       featureLayer.popupTemplate = popupTemplate;
-    });
+    
+      view.popup.collapseEnabled = false;
+      
+      var toggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "satellite"  // Use the "satellite" basemap
+      });
+
+      view.ui.add(toggle, "bottom-left");
+});
+    
   </script>
 </body>
 </html>
