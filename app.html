@@ -85,11 +85,11 @@
     </div>
   </div>
   <div class="topic-buttons">
-    <div class="topic-button" id="housing">🟨 Housing</div>
-    <div class="topic-button" id="infrastructure">🟪 Infrastructure</div>
-    <div class="topic-button" id="transportation">🟦 Transportation</div>
-    <div class="topic-button" id="parks">🟩 Parks & Nature</div>
-    <div class="topic-button" id="employment">🟥 Employment</div>
+    <div class="topic-button" id="housing">🟡 Housing</div>
+    <div class="topic-button" id="infrastructure">🟣 Infrastructure</div>
+    <div class="topic-button" id="transportation">🔵 Transportation</div>
+    <div class="topic-button" id="parks">🟢 Parks & Nature</div>
+    <div class="topic-button" id="employment">🔴 Employment</div>
   </div>
   <script>
     require([
@@ -269,7 +269,7 @@
       
       var toggle = new BasemapToggle({
         view: view,
-        nextBasemap: "satellite"  // Use the "satellite" basemap
+        nextBasemap: "hybrid"  // Use the "satellite" basemap
       });
 
       view.ui.add(toggle, "bottom-left");
