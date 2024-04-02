@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -6,6 +5,14 @@
   <title>Add Points to Feature Layer</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.29/"></script>
+  <script>
+  window.addEventListener("load", function() {
+  if (!localStorage.getItem("refreshed")) {
+    localStorage.setItem("refreshed", true);
+    window.location.reload();
+  }
+});</script>
+ 
   <style>
     #viewDiv {
       height: 80vh; /* Set your desired height */
@@ -85,12 +92,13 @@
     </div>
   </div>
   <div class="topic-buttons">
-    <div class="topic-button" id="housing">🟨 Housing</div>
-    <div class="topic-button" id="infrastructure">🟪 Infrastructure</div>
-    <div class="topic-button" id="transportation">🟦 Transportation</div>
-    <div class="topic-button" id="parks">🟩 Parks & Nature</div>
-    <div class="topic-button" id="employment">🟥 Employment</div>
+    <div class="topic-button" id="housing">🟡 Housing</div>
+    <div class="topic-button" id="infrastructure">🟣 Infrastructure</div>
+    <div class="topic-button" id="transportation">🔵 Transportation</div>
+    <div class="topic-button" id="parks">🟢 Parks & Nature</div>
+    <div class="topic-button" id="employment">🔴 Employment</div>
   </div>
+
   <script>
     require([
       "esri/Map",
@@ -269,7 +277,7 @@
       
       var toggle = new BasemapToggle({
         view: view,
-        nextBasemap: "satellite"  // Use the "satellite" basemap
+        nextBasemap: "hybrid"  // Use the "satellite" basemap
       });
 
       view.ui.add(toggle, "bottom-left");
