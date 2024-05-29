@@ -111,12 +111,12 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [-121.48747267724718, 43.690269822296436], // Center on La Pine, Oregon
-        zoom: 13 // Adjust zoom level as needed
+        center: [-84.2783950, 30.440023], // Center on Tallahassee, Florida
+        zoom: 11 // Adjust zoom level as needed
       });
 
       // Placeholder feature layer URL (replace with your actual layer)
-      var featureLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/LaPine_pub_comments/FeatureServer";
+      var featureLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/pub_comments/FeatureServer";
 
       // Create feature layer
       var featureLayer = new FeatureLayer({
@@ -185,7 +185,7 @@
       featureLayer.renderer = renderer;
 
       // Add the new polygon layer with transparent fill
-      var polygonLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/La_Pine_City_Limit/FeatureServer";
+      var polygonLayerUrl = "https://intervector.leoncountyfl.gov/intervector/rest/services/MapServices/TLC_Overlay_Citylimits_WM_D/MapServer";
       var polygonLayer = new FeatureLayer({
         url: polygonLayerUrl,
         renderer: {
@@ -195,7 +195,7 @@
             color: [0, 0, 255, 0], // Blue fill color with transparency
             outline: {
               color: [255, 0, 0, 1], // Red outline with transparency
-              width: 2 // 2 pixel thick border
+              width: 1 // 2 pixel thick border
             }
           }
         }
