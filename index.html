@@ -111,7 +111,13 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        fitBounds: [[-84.339, 30.396], [-84.203, 30.483]]
+        extent: {
+          xmin: -84.35,
+          ymin: 30.35,
+          xmax: -84.20,
+          ymax: 30.52,
+          spatialReference: { wkid: 4326 }
+        }
       });
 
       // Placeholder feature layer URL (replace with your actual layer)
