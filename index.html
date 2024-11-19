@@ -111,12 +111,11 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [-84.2783950, 30.440023], // Center on Tallahassee, Florida
-        zoom: 11 // Adjust zoom level as needed
+        fitBounds: [[-84.339 30.396], [-84.203, 30.483]]
       });
 
       // Placeholder feature layer URL (replace with your actual layer)
-      var featureLayerUrl = "https://services5.arcgis.com/hCmfQc6qPTKFJj8T/arcgis/rest/services/pub_comments/FeatureServer";
+      var featureLayerUrl = "https://services8.arcgis.com/tblHe99qQFMcNzpC/arcgis/rest/services/PublicComments/FeatureServer";
 
       // Create feature layer
       var featureLayer = new FeatureLayer({
