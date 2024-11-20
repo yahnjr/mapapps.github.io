@@ -35,7 +35,6 @@
       background-color: #ddd;
     }
 
-    r the ci
     .esri-geometry-point {
       outline: none; 
       width: 5px;
@@ -113,12 +112,12 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [long, lat],
+        center: ["***long, ***lat"],
         zoom: 13 
       });
 
       // Placeholder feature layer URL (replace with your actual editable comments layer. Needs to be publicly shared.)
-      var featureLayerUrl = PUBLIC_COMMENT_LAYER;
+      var featureLayerUrl = "***PUBLIC_COMMENT_LAYER";
 
       // Create feature layer
       var featureLayer = new FeatureLayer({
@@ -186,7 +185,7 @@
       featureLayer.renderer = renderer;
 
       // Add city limits layer with empty fill, if needed
-      var polygonLayerUrl = CITY_LIMITS_LAYER;
+      var polygonLayerUrl = "***CITY_LIMITS_LAYER";
       var polygonLayer = new FeatureLayer({
         url: polygonLayerUrl,
         renderer: {
@@ -264,7 +263,6 @@
         ]
       };
 
-      // Set the popup template for the feature layer
       featureLayer.popupTemplate = popupTemplate;
     
       view.popup.collapseEnabled = false; //Allows for easier popup viewing on mobile, as collapsed popups hard to read on mobile. 

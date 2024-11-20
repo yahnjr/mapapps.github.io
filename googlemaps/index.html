@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Google Map with KML</title>
+    <style>
+      /* Make the map fill the entire page */
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA00FzSTGTeO3Vqp1LyUKsNy-94rYiuqwE"></script>
+    <script>
+      function initMap() {
+        // Initialize the map centered at a specific location
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 8,
+          center: { lat: 37.7749, lng: -122.4194 }, // Example: San Francisco, CA
+        });
+
+        // Load the KML layer from a local file
+        const kmlLayer = new google.maps.KmlLayer({
+          url: 'C:\\python\\scripts\\mapps\\googlemaps', // Replace with the path to your local KML file
+          map: map,
+          preserveViewport: true,  // Set to true if you want to prevent the map from zooming to KML
+        });
+
+        // Add a click listener to the KML layer (to open a URL from an attribute)
+        google.maps.event.addListener(kmlLayer, 'click', (event) => {
+          const url = event.featureData.infoWindowHtml;  // Extract link from the KML description or name
+          if (url) {
+            window.open(url, '_blank');
+          }
+        });
+      }
+    </script>
+  </head>
+  <body onload="initMap()">
+    <div id="map"></div>
+  </body>
+</html>
