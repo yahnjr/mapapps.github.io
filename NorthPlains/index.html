@@ -45,7 +45,6 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
       background-color: white;
       padding: 10px;
       border: 1px solid #ddd;
@@ -54,59 +53,44 @@
       height: 200px;
       font-size: 11px;
     }
-
+    
     @media only screen and (min-width: 768px) {
-      .welcome-box {
-        font-size: 16px;
-      }
-
-      .close-button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        font-size: 20px;
-      }
-
-      .info-button {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        cursor: pointer;
-      }
-
-      .submit-button {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 15px;
-        background-color: #28a745;
-        color: white;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-      }
-
-      .submit-button:disabled {
-        background-color: #aaa;
-        cursor: not-allowed;
-      }
+    .welcome-box {
+      font-size: 16px;
     }
+
+    .close-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .info-button {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
   </style>
 </head>
 <body>
   <div id="viewDiv">
     <div class="welcome-box">
-      <p>Welcome! Please select a topic from the top right and double-click anywhere on the map to add a point. Click "Submit" to save your points.</p>
+      <!-- Add custom welcome message -->
+      <p>Welcome! Please select a topic from the top right and double-click anywhere on the map to add a point. Click "Submit" to save your points to the server.</p>
       <span class="close-button" onclick="document.querySelector('.welcome-box').style.display = 'none'">x</span>
     </div>
   </div>
   <div class="topic-buttons">
+    <!-- Add custom topics -->
     <div class="topic-button" id="housing">🟡 Housing</div>
     <div class="topic-button" id="employment">🔴 Employment</div>
   </div>
-  <button class="submit-button" id="submitBtn" disabled>Submit</button>
-
+  <button id="submitButton" class="info-button">Submit</button>
+  
   <script>
     require([
       "esri/Map",
@@ -115,8 +99,10 @@
       "esri/Graphic",
       "esri/symbols/SimpleMarkerSymbol",
       "esri/renderers/UniqueValueRenderer",
-      "esri/PopupTemplate"
-    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, PopupTemplate) {
+      "esri/renderers/HeatmapRenderer",
+      "esri/widgets/BasemapToggle",
+      "esri/Basemap"
+    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, HeatmapRenderer, BasemapToggle, Basemap) {
       var map = new Map({
         basemap: "topo-vector"
       });
@@ -124,63 +110,98 @@
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: ["-123, 45.598"],
+        center: ["-123", "45.578"], // Replace with actual coordinates
         zoom: 13 
       });
 
+      // Placeholder feature layer URL (replace with your actual editable comments layer)
       var featureLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/NorthPlainsUGBRelook/FeatureServer";
 
+      // Create feature layer
       var featureLayer = new FeatureLayer({
         url: featureLayerUrl,
         outFields: ["*"],
-        editable: true,
+        editable: true, 
       });
 
       map.add(featureLayer);
 
-      var renderer = new UniqueValueRenderer({
-        field: "topic",
-        defaultSymbol: new SimpleMarkerSymbol(),
-        uniqueValueInfos: [
+      // Define the symbol for each topic
+      var heatmapRenderer = new HeatmapRenderer({
+        field: "topic", // Apply different heatmaps based on the topic
+        colorStops: [
           {
-            value: "Housing",
-            symbol: {
-              type: "simple-marker",
-              size: 10,
-              color: [255, 255, 31],
-              outline: null
-            }
+            ratio: 0, // Starting ratio
+            color: "rgba(255, 255, 0, 0)" // Transparent for "Housing"
           },
           {
-            value: "Employment",
-            symbol: {
-              type: "simple-marker",
-              size: 10,
-              color: [193, 66, 104],
-              outline: null
-            }
+            ratio: 0.5,
+            color: "rgba(255, 255, 31, 0.7)" // Yellow for Housing
+          },
+          {
+            ratio: 1, // Maximum ratio
+            color: "rgba(255, 255, 31, 1)" // Intense yellow
+          },
+          {
+            ratio: 0,
+            color: "rgba(255, 0, 0, 0)" // Transparent for Employment
+          },
+          {
+            ratio: 0.5,
+            color: "rgba(193, 66, 104, 0.7)" // Red for Employment
+          },
+          {
+            ratio: 1,
+            color: "rgba(193, 66, 104, 1)" // Intense red
           }
-        ]
+        ],
+        radius: 10,
+        maxDensity: 1, 
+        minDensity: 0
       });
 
-      featureLayer.renderer = renderer;
+      featureLayer.renderer = heatmapRenderer;
 
-      var tempGraphics = [];  // Array to store temporary points
+      // Apply the renderer to the feature layer
+      featureLayer.renderer = heatmapRenderer;
 
+      // Add a polygon layer, if needed
+      // var polygonLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/North_Plains_UGB/FeatureServer/3";
+      // var polygonLayer = new FeatureLayer({
+      //   url: polygonLayerUrl,
+      //   renderer: {
+      //     type: "simple",
+      //     symbol: {
+      //       type: "simple-fill",
+      //       color: [0, 0, 255, 0], 
+      //       outline: {
+      //         color: [255, 0, 0, 1], 
+      //         width: 2 
+      //       }
+      //     }
+      //   }
+      // });
+
+      // map.add(polygonLayer);
+
+      // To store points added temporarily
+      var tempGraphics = [];
+
+      // Listen for double-click event to add points/comments
       view.on("double-click", function(event) {
         event.stopPropagation();
         
-        var selectedTopic = document.querySelector(".selected-topic");
-        if (!selectedTopic) {
-          alert("Please select a topic before adding a point.");
-          return;
-        }
-
         var point = {
           type: "point",
           longitude: event.mapPoint.longitude,
           latitude: event.mapPoint.latitude
         };
+
+        var selectedTopic = document.querySelector(".selected-topic");
+        if (!selectedTopic) {
+          alert("Please select a topic before adding a point.");
+          return;
+        }
 
         var attributes = {
           topic: selectedTopic.id.charAt(0).toUpperCase() + selectedTopic.id.slice(1)
@@ -191,31 +212,11 @@
           attributes: attributes
         });
 
-        // Add graphic to the view
-        view.graphics.add(newGraphic);
-        tempGraphics.push(newGraphic);  // Add to temporary storage
-        
-        document.getElementById("submitBtn").disabled = false; // Enable submit button
+        tempGraphics.push(newGraphic);
+        view.graphics.add(newGraphic); // Show point temporarily
       });
 
-      // Submit button click handler
-      document.getElementById("submitBtn").addEventListener("click", function() {
-        if (tempGraphics.length === 0) return;
-
-        featureLayer.applyEdits({
-          addFeatures: tempGraphics
-        }).then(function(response) {
-          // Clear temp storage and disable the button again after successful submission
-          tempGraphics = [];
-          document.getElementById("submitBtn").disabled = true;
-          view.graphics.removeAll();
-          alert("Points submitted successfully!");
-        }).catch(function(error) {
-          console.error("Error submitting points: ", error);
-        });
-      });
-
-      // Event listeners for topic buttons
+      // Add event listeners for topic buttons
       var topicButtons = document.querySelectorAll(".topic-button");
       topicButtons.forEach(function(button) {
         button.addEventListener("click", function() {
@@ -226,11 +227,32 @@
         });
       });
 
-      var popupTemplate = {
-        title: "{topic}",
-      };
+      // Submit button - send all temp points to the feature layer
+      document.getElementById("submitButton").addEventListener("click", function() {
+        if (tempGraphics.length > 0) {
+          featureLayer.applyEdits({
+            addFeatures: tempGraphics
+          }).then(function(response) {
+            console.log("Points submitted successfully:", response);
+            tempGraphics = []; // Clear the temp points array after submission
+            view.graphics.removeAll(); // Clear temp graphics from the map
+            alert("Points have been submitted successfully!");
+          }).catch(function(error) {
+            console.error("Error submitting points:", error);
+            alert("Error submitting points. Please try again.");
+          });
+        } else {
+          alert("No points to submit.");
+        }
+      });
 
-      featureLayer.popupTemplate = popupTemplate;
+      // Basemap toggle widget
+      var toggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "hybrid" 
+      });
+
+      view.ui.add(toggle, "bottom-left");
     });
   </script>
 </body>
