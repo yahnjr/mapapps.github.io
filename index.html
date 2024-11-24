@@ -8,11 +8,11 @@
   <script src="https://js.arcgis.com/4.29/"></script>
   <style>
     #viewDiv {
-      height: 80vh; /* Set your desired height */
-      width: 100%; /* Adjust width as needed */
+      height: 80vh;
+      width: 100%;
       margin: 0;
       padding: 0;
-      position: relative; /* Added position relative */
+      position: relative;
     }
 
     .topic-buttons {
@@ -20,44 +20,44 @@
       top: 10px;
       right: 10px;
       display: flex;
-      flex-direction: column; /* Buttons stacked vertically */
+      flex-direction: column;
     }
 
     .topic-button {
-      margin-bottom: 5px; /* Add spacing between buttons */
-      padding: 5px 10px; /* Add some padding for better look */
+      margin-bottom: 5px;
+      padding: 5px 10px;
       cursor: pointer;
-      background-color: #eee; /* Default button color */
-      border: 1px solid #ddd; /* Button border */
+      background-color: #eee;
+      border: 1px solid #ddd;
     }
 
     .topic-button.selected-topic {
-      background-color: #ddd; /* Slightly darker for selected button */
+      background-color: #ddd;
     }
 
-    /* Updated styling for the circles */
     .esri-geometry-point {
-      outline: none; /* Remove outlines */
-      width: 5px; /* Make circles smaller */
-      height: 5px; /* Make circles smaller */
+      outline: none;
+      width: 5px;
+      height: 5px;
     }
 
     .welcome-box {
       position: absolute;
       top: 50%;
       left: 50%;
+      transform: translate(50%,-50%);
       background-color: white;
       padding: 10px;
       border: 1px solid #ddd;
-      z-index: 1; /* Ensure it's above the map */
-      max-width: 300px; /* Make it narrower */
-      height: 200px; /* Make it taller */
+      z-index: 1;
+      max-width: 300px;
+      height: 200px; 
       font-size: 11px;
     }
     
     @media only screen and (min-width: 768px) {
     .welcome-box {
-      font-size: 16px; /* Larger font size for computer screens */
+      font-size: 16px; 
     }
 
     .close-button {
