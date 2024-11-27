@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Add Points to Feature Layer</title>
+  <title>North Plains UGB Expansion Feedback</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.29/"></script>
   <style>
@@ -13,26 +13,6 @@
       margin: 0;
       padding: 0;
       position: relative;
-    }
-
-    .topic-buttons {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .topic-button {
-      margin-bottom: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-      background-color: #eee;
-      border: 1px solid #ddd;    
-    }
-
-    .topic-button.selected-topic {
-      background-color: #ddd;
     }
 
     .esri-geometry-point {
@@ -45,6 +25,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
+      transform: translate(-50%, -50%);
       background-color: white;
       padding: 10px;
       border: 1px solid #ddd;
@@ -55,8 +36,18 @@
     }
     
     @media only screen and (min-width: 768px) {
-    .welcome-box {
-      font-size: 16px;
+      .welcome-box {
+        font-size: 16px;
+      }
+    }
+
+    #banner {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      max-width: 50%;
+      z-index: 4;
+      background-color: white;
     }
 
     .close-button {
@@ -73,187 +64,249 @@
       right: 10px;
       cursor: pointer;
     }
-  }
+
+    #dropdown {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ddd;
+      width: 200px;
+    }
+
+    #applyButton {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      z-index: 4;
+      height: 70px;
+      width: 120px;
+      background-color: white;
+    }
   </style>
 </head>
 <body>
   <div id="viewDiv">
+    <h1 id="banner">North Plains UGB Expansion: Submit Feedback</h1>
     <div class="welcome-box">
-      <!-- Add custom welcome message -->
-      <p>Welcome! Please select a topic from the top right and double-click anywhere on the map to add a point. Click "Submit" to save your points to the server.</p>
+      <p>Welcome! Please select an expansion type ("Employment" or "Housing") for each parcel in the expansion area. When you are satisfied with your selections, click "Submit Changes" to see how others have been weighing in on North Plains' expansion.</p>
       <span class="close-button" onclick="document.querySelector('.welcome-box').style.display = 'none'">x</span>
     </div>
+    <button id="applyButton" class="info-button">Submit Changes</button>
   </div>
-  <div class="topic-buttons">
-    <!-- Add custom topics -->
-    <div class="topic-button" id="housing">🟡 Housing</div>
-    <div class="topic-button" id="employment">🔴 Employment</div>
+  <div id="dropdown">
+    <label for="expansiontype">Expansion Type:</label>
+    <select id="expansiontype">
+      <option value="">--Select--</option>
+      <option value="Employment">Employment</option>
+      <option value="Housing">Housing</option>
+    </select>
+    <button id="apply">Apply</button>
   </div>
-  <button id="submitButton" class="info-button">Submit</button>
   
   <script>
     require([
       "esri/Map",
       "esri/views/MapView",
       "esri/layers/FeatureLayer",
+      "esri/layers/GeoJSONLayer",
       "esri/Graphic",
       "esri/symbols/SimpleMarkerSymbol",
       "esri/renderers/UniqueValueRenderer",
-      "esri/renderers/HeatmapRenderer",
       "esri/widgets/BasemapToggle",
       "esri/Basemap"
-    ], function(Map, MapView, FeatureLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, HeatmapRenderer, BasemapToggle, Basemap) {
+    ], function(Map, MapView, FeatureLayer, GeoJSONLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, HeatmapRenderer, BasemapToggle, Basemap) {
+      
       var map = new Map({
         basemap: "topo-vector"
       });
-
+  
       var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: ["-123", "45.578"], // Replace with actual coordinates
-        zoom: 13 
+        center: ["-123", "45.6"],
+        zoom: 13.5
       });
-
-      // Placeholder feature layer URL (replace with your actual editable comments layer)
-      var featureLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/NorthPlainsUGBRelook/FeatureServer";
-
-      // Create feature layer
-      var featureLayer = new FeatureLayer({
-        url: featureLayerUrl,
-        outFields: ["*"],
-        editable: true, 
+  
+      var renderer = new UniqueValueRenderer({
+        field: "expansiontype",
+        defaultSymbol: { type: "simple-fill", color: [255, 255, 255, 0] }, 
+        uniqueValueInfos: [
+          { value: "Employment", symbol: { type: "simple-fill", color: [255, 0, 0, 0.7] } }, 
+          { value: "Housing", symbol: { type: "simple-fill", color: [255, 255, 0, 0.7] } } 
+        ]
       });
+  
+      var geojsonLayer = new GeoJSONLayer({
+        url: "taxlots.geojson",
+        renderer: renderer,
+        outFields: ['*']
+      });
+  
+      map.add(geojsonLayer);
 
-      map.add(featureLayer);
-
-      // Define the symbol for each topic
-      var heatmapRenderer = new HeatmapRenderer({
-        field: "topic", // Apply different heatmaps based on the topic
-        colorStops: [
-          {
-            ratio: 0, // Starting ratio
-            color: "rgba(255, 255, 0, 0)" // Transparent for "Housing"
-          },
-          {
-            ratio: 0.5,
-            color: "rgba(255, 255, 31, 0.7)" // Yellow for Housing
-          },
-          {
-            ratio: 1, // Maximum ratio
-            color: "rgba(255, 255, 31, 1)" // Intense yellow
-          },
-          {
-            ratio: 0,
-            color: "rgba(255, 0, 0, 0)" // Transparent for Employment
-          },
-          {
-            ratio: 0.5,
-            color: "rgba(193, 66, 104, 0.7)" // Red for Employment
-          },
-          {
-            ratio: 1,
-            color: "rgba(193, 66, 104, 1)" // Intense red
+      var ugbUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/North_Plains_UGB_for_App/FeatureServer/0";
+      var ugbLayer = new FeatureLayer({
+        url: ugbUrl,
+        renderer: {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [0, 0, 255, 0], 
+            outline: {
+              color: [0, 0, 255, 1], 
+              width: 2 
+            }
           }
-        ],
-        radius: 10,
-        maxDensity: 1, 
-        minDensity: 0
+        }
       });
 
-      featureLayer.renderer = heatmapRenderer;
-
-      // Apply the renderer to the feature layer
-      featureLayer.renderer = heatmapRenderer;
-
-      // Add a polygon layer, if needed
-      // var polygonLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/North_Plains_UGB/FeatureServer/3";
-      // var polygonLayer = new FeatureLayer({
-      //   url: polygonLayerUrl,
-      //   renderer: {
-      //     type: "simple",
-      //     symbol: {
-      //       type: "simple-fill",
-      //       color: [0, 0, 255, 0], 
-      //       outline: {
-      //         color: [255, 0, 0, 1], 
-      //         width: 2 
-      //       }
-      //     }
-      //   }
-      // });
-
-      // map.add(polygonLayer);
-
-      // To store points added temporarily
-      var tempGraphics = [];
-
-      // Listen for double-click event to add points/comments
-      view.on("double-click", function(event) {
-        event.stopPropagation();
-        
-        var point = {
-          type: "point",
-          longitude: event.mapPoint.longitude,
-          latitude: event.mapPoint.latitude
-        };
-
-        var selectedTopic = document.querySelector(".selected-topic");
-        if (!selectedTopic) {
-          alert("Please select a topic before adding a point.");
+      map.add(ugbLayer);
+  
+      var pendingChanges = [];
+      var selectedFeature = null;
+  
+      // Display the dropdown when a feature is clicked
+      view.on("click", function(event) {
+        view.hitTest(event).then(function(response) {
+          var results = response.results;
+          if (results.length > 0 && results[0].graphic) {
+            selectedFeature = results[0].graphic;
+  
+            var dropdown = document.getElementById("dropdown");
+            dropdown.style.display = "flex";
+            dropdown.style.flexDirection = "column";
+            dropdown.style.top = event.y + "px";
+            dropdown.style.left = event.x + "px";
+          }
+        });
+      });
+  
+      // Apply the category selection and temporarily update the symbology
+      document.getElementById("apply").addEventListener("click", function() {
+        if (selectedFeature) {
+          var selectedValue = document.getElementById("expansiontype").value;
+  
+          // Store the change in the pendingChanges array
+          var featureId = selectedFeature.attributes.OBJECTID; 
+          
+          addPendingChange(featureId, selectedValue);
+  
+          // Temporarily update the symbology for the selected feature
+          var updatedGraphic = new Graphic({
+            geometry: selectedFeature.geometry,
+            attributes: {
+              ...selectedFeature.attributes,
+              expansiontype: selectedValue
+            },
+            symbol: renderer.getSymbol({
+              attributes: {
+                expansiontype: selectedValue
+              }
+            })
+          });
+  
+          view.graphics.remove(selectedFeature);
+          view.graphics.add(updatedGraphic);
+  
+          document.getElementById("dropdown").style.display = "none";
+        }
+      });
+  
+      // Add or update pending change
+      function addPendingChange(featureId, expansionType) {
+        var existingChange = pendingChanges.find(change => change.id === featureId);
+        if (existingChange) {
+          existingChange.expansiontype = expansionType;
+        } else {
+          pendingChanges.push({ id: featureId, expansiontype: expansionType });
+        }
+        console.log("Pending changes:", pendingChanges);
+      }
+  
+      document.getElementById("applyButton").addEventListener("click", function() {
+        if (pendingChanges.length === 0) {
+          console.log("No changes to apply.");
+          alert("No changes to apply.");
           return;
         }
-
-        var attributes = {
-          topic: selectedTopic.id.charAt(0).toUpperCase() + selectedTopic.id.slice(1)
-        };
-
-        var newGraphic = new Graphic({
-          geometry: point,
-          attributes: attributes
+  
+        console.log("Applying changes...");
+  
+        pendingChanges.forEach(function(change) {
+          console.log("Updating feature with ID:", change.id, "and expansiontype:", change.expansiontype); // Log each change being applied
+          updateAGOLLayer(change.id, change.expansiontype);
         });
+  
+        pendingChanges = [];
+        console.log("Pending changes array reset.");
+        alert("Changes applied successfully!");
 
-        tempGraphics.push(newGraphic);
-        view.graphics.add(newGraphic); // Show point temporarily
+        // Take to results page
+        window.open('results/index.html', '_blank');
+      });
+  
+      var agolFeatureLayer = new FeatureLayer({
+        url: "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/ArcGIS/rest/services/North_Plains_Expansion_Taxlots/FeatureServer/0", // Add your AGOL layer URL here
+        outFields: ["OBJECTID", "Housing", "Employment"]
       });
 
-      // Add event listeners for topic buttons
-      var topicButtons = document.querySelectorAll(".topic-button");
-      topicButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
-          topicButtons.forEach(function(btn) {
-            btn.classList.remove("selected-topic");
-          });
-          button.classList.add("selected-topic");
+      function updateAGOLLayer(featureId, expansionType) {
+        var query = agolFeatureLayer.createQuery();
+        query.where = "OBJECTID = " + featureId; 
+
+        agolFeatureLayer.queryFeatures(query).then(function(result) {
+          if (result.features.length > 0) {
+            var feature = result.features[0];
+            var attributes = feature.attributes;
+
+            var housingCount = attributes["Housing"] || 0;
+            var employmentCount = attributes["Employment"] || 0;
+
+            console.log("Current counts for feature ID", featureId, "Housing:", housingCount, "Employment:", employmentCount); // Log current counts
+
+            if (expansionType === "Housing") {
+              housingCount += 1;
+            } else if (expansionType === "Employment") {
+              employmentCount += 1;
+            }
+
+            // Update the AGOL feature with new counts
+            var updatedFeature = new Graphic({
+              attributes: {
+                OBJECTID: featureId,
+                Housing: housingCount,
+                Employment: employmentCount
+              }
+            });
+
+            console.log("Attempting to update feature ID", featureId, "with new Housing count:", housingCount, "and Employment count:", employmentCount);
+
+            agolFeatureLayer.applyEdits({
+              updateFeatures: [updatedFeature]
+            }).then(function(response) {
+              console.log("Update successful for feature ID", featureId, "Response:", response); 
+            }).catch(function(error) {
+              console.error("Error updating AGOL layer for feature ID", featureId, "Error:", error); 
+            });
+          } else {
+            console.warn("No feature found in AGOL layer with OBJECTID", featureId);
+          }
+        }).catch(function(error) {
+          console.error("Error querying AGOL layer for feature ID", featureId, "Error:", error);
         });
+      }
+
+      let legend = new Legend({
+        view: view
       });
 
-      // Submit button - send all temp points to the feature layer
-      document.getElementById("submitButton").addEventListener("click", function() {
-        if (tempGraphics.length > 0) {
-          featureLayer.applyEdits({
-            addFeatures: tempGraphics
-          }).then(function(response) {
-            console.log("Points submitted successfully:", response);
-            tempGraphics = []; // Clear the temp points array after submission
-            view.graphics.removeAll(); // Clear temp graphics from the map
-            alert("Points have been submitted successfully!");
-          }).catch(function(error) {
-            console.error("Error submitting points:", error);
-            alert("Error submitting points. Please try again.");
-          });
-        } else {
-          alert("No points to submit.");
-        }
-      });
-
-      // Basemap toggle widget
-      var toggle = new BasemapToggle({
-        view: view,
-        nextBasemap: "hybrid" 
-      });
-
-      view.ui.add(toggle, "bottom-left");
+      view.ui.add(legend, "bottom-left");
     });
   </script>
+  
+  
 </body>
 </html>

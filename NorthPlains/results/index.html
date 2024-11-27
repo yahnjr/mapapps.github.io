@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>North Plains Results</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
+  <style>
+    #viewDiv {
+      height: 80vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    #banner {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      max-width: 50%;
+      z-index: 4;
+      background-color: white;
+    }
+
+    .esri-geometry-point {
+      outline: none; 
+      width: 5px;
+      height: 5px;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="viewDiv">
+    <h1 id="banner">North Plains UGB Expansion: Results</h1>
+  </div>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "esri/layers/GeoJSONLayer",
+      "esri/Graphic",
+      "esri/symbols/SimpleMarkerSymbol",
+      "esri/renderers/UniqueValueRenderer",
+      "esri/widgets/BasemapToggle",
+      "esri/Basemap"
+    ], function(Map, MapView, FeatureLayer, GeoJSONLayer, Graphic, SimpleMarkerSymbol, UniqueValueRenderer, HeatmapRenderer, BasemapToggle, Basemap) {
+      
+      var map = new Map({
+        basemap: "topo-vector"
+      });
+  
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: ["-123", "45.6"],
+        zoom: 13.5
+      });
+      
+      var featureLayerUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/ArcGIS/rest/services/North_Plains_Expansion_Taxlots/FeatureServer/0";
+
+      var housingLayer = new FeatureLayer({
+        url: featureLayerUrl,
+        renderer: {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [255, 255, 0, 0.6], 
+            outline: {
+              color: [128, 128, 128, 0.5],
+              width: 1
+            }
+          },
+          visualVariables: [
+            {
+              type: "color",
+              field: "Housing",
+              legendOptions: {
+                title: "Housing Intensity"
+              },
+              stops: [
+                { value: 0, color: [255, 255, 0, 0] },
+                { value: 10, color: [255, 255, 0, 0.6] }
+              ]
+            }
+          ]
+        }
+      });
+
+      var employmentLayer = new FeatureLayer({
+        url: featureLayerUrl,
+        popupTemplate: {
+          title: "Parcel Details",
+          content: [
+            {
+              type: "text",
+              text: `
+              TLID: {TLID}<br>
+              Housing Count: {Housing}<br>
+              Employment Count: {Employment}<br>
+              `
+            }
+          ]
+        },
+        renderer: {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [255, 0, 0, 0.6],
+            outline: {
+              color: [128, 128, 128, 0.5],
+              width: 1
+            }
+          },
+          visualVariables: [
+            {
+              type: "color",
+              field: "Employment",
+              legendOptions: {
+                title: "Employment Intensity"
+              },
+              stops: [
+                { value: 0, color: [255, 0, 0, 0] },
+                { value: 10, color: [255, 0, 0, 0.6] }
+              ]
+            }
+          ]
+        }
+      });
+
+      map.add(housingLayer);
+      map.add(employmentLayer);
+
+      var ugbUrl = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/North_Plains_UGB_for_App/FeatureServer/0";
+      var ugbLayer = new FeatureLayer({
+        url: ugbUrl,
+        renderer: {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [0, 0, 255, 0], 
+            outline: {
+              color: [0, 0, 255, 1], 
+              width: 2 
+            }
+          }
+        }
+      });
+
+      map.add(ugbLayer);
+
+      let legend = new Legend({
+        view: view
+      });
+
+      view.ui.add(legend, "bottom-left");
+    });
+  </script>
+  
+  
+</body>
+</html>
