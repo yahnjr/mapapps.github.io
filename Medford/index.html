@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Medford TSAP Feedback</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
+    </head>
+    <body>
+        <div id="central-content">
+            <span id="header">Medford Transportation Survey</span>
+
+            <div class="extra-content">
+                <h3>Select a topic below to submit a comment</h3>
+                <p>When providing feedback, consider:</p>
+                <ul>
+                    <li>What transportation safety concerns do you have in your neighborhood or the areas where you travel most frequently?</li>
+                    <li>Are there specific roads, intersections, or crosswalks where you feel particularly unsafe?</li>
+                </ul>
+            </div>
+
+            <div id="map">
+                <div id="controlPanel">
+                    <select id="topics-dropdown">
+                    <option value="">Select an issue...</option>
+                    <option value="Near Miss">Near Miss</option>
+                    <option value="Not Enough Separation">Not Enough Separation</option>
+                    <option value="Distracted Driving">Distracted Driving</option>
+                    <option value="Insufficient Lighting">Insufficient Lighting</option>
+                    <option value="Speeding">Speeding</option>
+                    <option value="Line of Sight">Line of Sight</option>
+                    <option value="Other">Other</option>
+                    </select>
+                    <div id="buttons-box">
+                        <button class="submitBtn" id="submitBtn">Submit Comments</button>
+                        <button class="cancelBtn" id="cancelBtn">Cancel</button>
+                    </div>
+                </div>
+                
+                <div class="viewDiv" id="viewDiv"></div>
+
+            </div>
+            <div class="extra-content" id="extra-comment-box">
+                <h3>Do you have anything else to add?</h3>
+                <textarea id="extraComment"></textarea>
+            </div>
+            <button class="commentSubmit" id="commentSubmit">Submit</button>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
