@@ -12,7 +12,7 @@ body {
 #central-content {
     background-color: white;
     min-width: 500px;
-    max-width: 800px;
+    max-width: 600px;
     min-height: 80vh;
     max-height: 100vh;
     width: 50%;
@@ -49,21 +49,13 @@ body {
 }
 
 .viewDiv {
-    height: 70%;
+    height: 85%;
     width: 100%;
     margin: 10px;
     margin-bottom: 0;
     padding: 10px;
 }
 
-#controlPanel {
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    text-align: center;
-    padding: 10px;
-    z-index: 100;
-}
 #buttons-box {
     position: relative;
     display: flex;
@@ -72,7 +64,7 @@ body {
     gap: 10px;
     z-index: 1000;
 }
-#topics-dropdown {
+#topicsDropdown {
     font-size: 16px;
     padding: 10px;
     width: 100%;
@@ -105,10 +97,6 @@ body {
     justify-content: left;
     width: 90%;
     font-size: 0.7em;
-}
-
-@media screen  {
-    
 }
 
 #extraComment {

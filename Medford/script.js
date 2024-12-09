@@ -16,6 +16,7 @@ require([
     });
 
     let selectedValue = '';
+    let addPointHandler;
 
     function createCommentModal() {
         var modalDiv = document.createElement('div');
@@ -247,7 +248,7 @@ require([
         outline: { color: "white", width: 1 }
     });
 
-    view.on("click", function(event) {
+    addPointHandler = view.on("click", function(event) {
         var selectedValue = topicsDropdown.value;
         console.log(`Selected topic: ${selectedValue}`)
         if (selectedValue === "") {
@@ -333,6 +334,11 @@ require([
 
         tempPins = [];
         view.graphics.removeAll();
+
+        if (addPointHandler) {
+            addPointHandler.remove(); 
+            addPointHandler = null;
+        }
     });
 
     document.getElementById("cancelBtn").addEventListener("click", function() {
