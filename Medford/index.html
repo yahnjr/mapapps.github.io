@@ -13,18 +13,27 @@
             <span id="header">Medford Transportation Survey</span>
 
             <div class="extra-content">
-                <h3>Select a topic below to submit a comment</h3>
-                <p>When providing feedback, consider:</p>
+                <p>Use the interactive mapping tool below to identify specific locations in Medford where you feel transportation safety improvements are needed and suggest ideas for enhancements. Click on locations of interest, like roads, intersections and crosswalks, to leave comments and see feedback from others in the community. Multiple comments are welcome!</p>
+                <p>When placing a pin on the map and sharing your comment, consider:</p>
                 <ul>
-                    <li>What transportation safety concerns do you have in your neighborhood or the areas where you travel most frequently?</li>
-                    <li>Are there specific roads, intersections, or crosswalks where you feel particularly unsafe?</li>
+                    <li><b><i>What transportation safety concerns do you have in your neighborhood or areas where you travel most frequently? Consider the following types of concerns when providing your comment:</b></i></li>
+                    <ul>
+                        <li>Near Miss</li>
+                        <li>Not Enough Separation</li>
+                        <li>Distracted Driving</li>
+                        <li>Insufficient Lighting</li>
+                        <li>Speeding</li>
+                        <li>Line of Sight</li>
+                        <li>Other</li>
+                    </ul>
+                    <li><b><i>What are your ideas for improving these transportation safety issues? </b></i></li>
                 </ul>
             </div>
 
             <div id="map">
                 <div id="controlPanel">
                     <select id="topics-dropdown">
-                    <option value="">Select an issue...</option>
+                    <option value="">Select a Transportation Concern...</option>
                     <option value="Near Miss">Near Miss</option>
                     <option value="Not Enough Separation">Not Enough Separation</option>
                     <option value="Distracted Driving">Distracted Driving</option>
@@ -33,20 +42,20 @@
                     <option value="Line of Sight">Line of Sight</option>
                     <option value="Other">Other</option>
                     </select>
-                    <div id="buttons-box">
-                        <button class="submitBtn" id="submitBtn">Submit Comments</button>
-                        <button class="cancelBtn" id="cancelBtn">Cancel</button>
-                    </div>
                 </div>
                 
                 <div class="viewDiv" id="viewDiv"></div>
-
+                
+                <div id="buttons-box">
+                    <button class="submitBtn" id="submitBtn">Save & Submit All Map Comments</button>
+                    <button class="cancelBtn" id="cancelBtn">Clear Comments</button>
+                </div>
             </div>
             <div class="extra-content" id="extra-comment-box">
-                <h3>Do you have anything else to add?</h3>
+                <h3>Do you have any additional comments?</h3>
                 <textarea id="extraComment"></textarea>
             </div>
-            <button class="commentSubmit" id="commentSubmit">Submit</button>
+            <button class="commentSubmit" id="commentSubmit">Submit Additional Comments</button>
         </div>
 
         <script src="script.js"></script>

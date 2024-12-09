@@ -22,11 +22,14 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
 #map {
     width: 95%;
-    height: 60vh;
+    height: 70vh;
+    min-height: 400px;
     background-color: #e0e0e0;
     border-radius: 3px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -46,9 +49,10 @@ body {
 }
 
 .viewDiv {
-    height: 100%;
+    height: 70%;
     width: 100%;
     margin: 10px;
+    margin-bottom: 0;
     padding: 10px;
 }
 
@@ -60,6 +64,14 @@ body {
     padding: 10px;
     z-index: 100;
 }
+#buttons-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    z-index: 1000;
+}
 #topics-dropdown {
     font-size: 16px;
     padding: 10px;
@@ -68,10 +80,6 @@ body {
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-}
-#buttons-box {
-    display: none;
-    padding: 0px;
 }
 .submitBtn, .cancelBtn {
     margin-top: 10px;
@@ -111,7 +119,7 @@ body {
 #commentSubmit {
     margin-top: 10px;
     padding: 10px;
-    width: 80px;
+    width: 200px;
     border: 1px solid #ccc;
     background-color: #054879;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

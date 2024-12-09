@@ -283,8 +283,7 @@ require([
             tempPin.comment = comment;
             
             tempPins.push(tempPin);
-            
-            document.getElementById("buttons-box").style.display = "flex";
+    
             
             commentModal.modal.style.display = 'none';
         }
@@ -307,10 +306,6 @@ require([
         geometry: point,
         type: selectedValue
     });
-
-    if (tempPins.length > 0) {
-        document.getElementById("buttons-box").style.display = "flex";
-    }
 
     document.getElementById("submitBtn").addEventListener("click", function() {
         if (tempPins.length === 0) {
@@ -338,13 +333,11 @@ require([
 
         tempPins = [];
         view.graphics.removeAll();
-        document.getElementById("buttons-box").style.display = "none";
     });
 
     document.getElementById("cancelBtn").addEventListener("click", function() {
         tempPins = [];
         view.graphics.removeAll();
-        document.getElementById("buttons-box").style.display = "none";
     });
 
     commentModal.cancelBtn.addEventListener('click', function() {
