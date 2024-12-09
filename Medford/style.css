@@ -96,6 +96,7 @@ body {
 .extra-content {
     justify-content: left;
     width: 90%;
+    font-size: 0.7em;
 }
 
 @media screen  {
