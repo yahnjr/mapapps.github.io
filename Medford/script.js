@@ -15,72 +15,20 @@ require([
         basemap: "hybrid"
     });
 
-    let selectedValue = '';
+    let selectedValue = 'None';
     let addPointHandler;
 
-    function createCommentModal() {
-        var modalDiv = document.createElement('div');
-        modalDiv.id = 'commentModal';
-        modalDiv.style.cssText = `
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        `;
+    const commentModal = document.getElementById("commentModal");
+    const commentField = document.getElementById("commentField");
+    const submitComment = document.getElementById("submitComment");
+    const cancelComment = document.getElementById("cancelComment");
+    const topicsDropdown = document.getElementById("topicsDropdown");
 
-        var modalContent = document.createElement('div');
-        modalContent.style.cssText = `
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 10px;
-        `;
-
-        var commentLabel = document.createElement('label');
-        commentLabel.textContent = 'Add a Comment:';
-        commentLabel.style.display = 'block';
-        commentLabel.style.marginBottom = '10px';
-
-        var commentInput = document.createElement('textarea');
-        commentInput.id = 'commentInput';
-        commentInput.style.cssText = `
-            width: 90%;
-            height: 100px;
-            margin-bottom: 10px;
-            padding: 10px;
-        `;
-
-        var submitButton = document.createElement('button');
-        submitButton.className = 'submitBtn';
-        submitButton.textContent = 'Submit Comment';
-        submitButton.style.marginRight = '10px';
-
-        var cancelButton = document.createElement('button');
-        cancelButton.className = 'cancelBtn';
-        cancelButton.textContent = 'Cancel';
-
-        modalContent.appendChild(commentLabel);
-        modalContent.appendChild(commentInput);
-        modalContent.appendChild(submitButton);
-        modalContent.appendChild(cancelButton);
-        modalDiv.appendChild(modalContent);
-        document.body.appendChild(modalDiv);
-
-        return {
-            modal: modalDiv,
-            input: commentInput,
-            submitBtn: submitButton,
-            cancelBtn: cancelButton
-        };
-    }
+    topicsDropdown.addEventListener('change', () => {
+        selectedValue = topicsDropdown.value;
+        console.log(selectedValue);
+        return selectedValue;
+    })
 
     var view = new MapView({
         container: "viewDiv",
@@ -93,8 +41,6 @@ require([
             spatialReference: { wkid: 4326 }
             }
         });
-
-    var commentModal = createCommentModal();
 
     var cityLimits = "https://services3.arcgis.com/pZZTDhBBLO3B9dnl/arcgis/rest/services/Medford_tsap_layers/FeatureServer/6";
     var cityLimitsLayer = new FeatureLayer({
@@ -240,7 +186,6 @@ require([
     commentsLayer.renderer = renderer;
 
     var tempPins = [];
-    var topicsDropdown = document.getElementById("topics-dropdown");
 
     var pinSymbol = new SimpleMarkerSymbol({
         color: "red",
@@ -249,72 +194,58 @@ require([
     });
 
     addPointHandler = view.on("click", function(event) {
-        var selectedValue = topicsDropdown.value;
-        console.log(`Selected topic: ${selectedValue}`)
-        if (selectedValue === "") {
-            return;
-        }
-
         var point = event.mapPoint;
         
         var newGraphic = new Graphic({
             geometry: point,
-            symbol: pinSymbol,
-            attributes: {
-                type: selectedValue
-            }
+            symbol: pinSymbol
         });
-
+    
         view.graphics.add(newGraphic);
-
-        commentModal.modal.style.display = 'block';
-        commentModal.input.value = '';
 
         window.currentTempPin = {
             geometry: point,
-            type: selectedValue
-        };
+            type: null,
+            comment: null
+        }
+    
+        commentModal.style.display = 'block';
+        commentField.value = '';        
+        topicsDropdown.selectedIndex = 0;
     });
-
-    commentModal.submitBtn.addEventListener('click', function() {
-        var comment = commentModal.input.value.trim();
+    
+    submitComment.addEventListener('click', function() {
+        console.log(window.currentTempPin);
+        var comment = commentField.value.trim();
         
-        if (window.currentTempPin) {
-            var tempPin = window.currentTempPin;
-            tempPin.comment = comment;
+        if (window.currentTempPin && selectedValue !== "") {
+            window.currentTempPin.type = selectedValue;
+            window.currentTempPin.comment = comment;
             
-            tempPins.push(tempPin);
-    
+            console.log("Pin being added:", window.currentTempPin);
+            tempPins.push(window.currentTempPin);    
             
-            commentModal.modal.style.display = 'none';
+            commentModal.style.display = 'none';
+            window.currentTempPin = null;
+        } else {
+            console.log("Error with selected type");
         }
-    });
-
-
-    var point = event.mapPoint;
-    
-    var newGraphic = new Graphic({
-        geometry: point,
-        symbol: pinSymbol,
-        attributes: {
-            type: selectedValue
-        }
-    });
-
-    view.graphics.add(newGraphic);
-
-    tempPins.push({
-        geometry: point,
-        type: selectedValue
     });
 
     document.getElementById("submitBtn").addEventListener("click", function() {
-        if (tempPins.length === 0) {
-            alert("No pins to submit.");
+        const validPins = tempPins.filter(pin => pin.geometry && pin.type);
+    
+        if (validPins.length === 0) {
+            alert("No valid pins to submit.");
+            console.log("No valid pins found:", tempPins);
             return;
         }
 
-        tempPins.forEach(function(pin) {
+        console.log("Submitting the following valid pins:", validPins);
+    
+        validPins.forEach(function(pin, index) {
+            console.log(`Submitting valid pin #${index + 1}:`, pin);
+    
             var newGraphic = new Graphic({
                 geometry: pin.geometry,
                 attributes: {
@@ -322,37 +253,37 @@ require([
                     comment: pin.comment || ''
                 }
             });
-
+    
             commentsLayer.applyEdits({
                 addFeatures: [newGraphic]
             }).then(function(result) {
-                console.log("Comments submitted!", result);
+                console.log(`Pin #${index + 1} submitted successfully:`, result);
             }).catch(function(error) {
-                console.error("Error submitting comments:", error);
+                console.error(`Error submitting pin #${index + 1}:`, error);
             });
         });
-
+    
         tempPins = [];
         view.graphics.removeAll();
-
+    
         if (addPointHandler) {
             addPointHandler.remove(); 
             addPointHandler = null;
         }
-    });
+    });    
 
     document.getElementById("cancelBtn").addEventListener("click", function() {
         tempPins = [];
         view.graphics.removeAll();
     });
 
-    commentModal.cancelBtn.addEventListener('click', function() {
+    cancelComment.addEventListener('click', function() {
         var graphics = view.graphics.toArray();
         if (graphics.length > 0) {
             view.graphics.remove(graphics[graphics.length - 1]);
         }
 
-        commentModal.modal.style.display = 'none';
+        commentModal.style.display = 'none';
         window.currentTempPin = null;
     });
 
@@ -407,4 +338,3 @@ require([
     view.ui.add(locateWidget, "top-left");
     view.ui.move("zoom", "top-left");
 });
-
