@@ -179,8 +179,13 @@
       var view = new MapView({
         container: "viewDiv1",
         map: map,
-        center: ["-123", "45.6"],
-        zoom: 14
+        extent: {
+                xmin: -123.043,
+                ymin: 45.582,
+                xmax: -122.95,
+                ymax: 45.617,
+            spatialReference: { wkid: 4326 }
+            }
       });
 
       var map2 = new Map({
@@ -190,8 +195,13 @@
       var view2 = new MapView({
         container: "viewDiv2",
         map: map2,
-        center: ["-123", "45.6"],
-        zoom: 14
+        extent: {
+                xmin: -123.025,
+                ymin: 45.584,
+                xmax: -122.959,
+                ymax: 45.609,
+            spatialReference: { wkid: 4326 }
+            }
       });
   
       var renderer = new UniqueValueRenderer({
@@ -273,7 +283,7 @@
           }
         }
       });
-      
+
       map.add(taxlotLayer);
       map.add(ugbLayer);
       map.add(expansionLayer);
