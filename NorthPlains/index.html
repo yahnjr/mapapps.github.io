@@ -8,7 +8,7 @@
   <script src="https://js.arcgis.com/4.29/"></script>
   <style>
     .viewDiv {
-      height: 80vh;
+      height: 90vh;
       width: 100%;
       margin: 0;
       padding: 0;
@@ -53,10 +53,13 @@
     #banner {
       position: absolute;
       top: 30px;
-      left: 5%;
+      right: 5%;
       max-width: 50%;
       z-index: 5;
-      background-color: rgb(255, 255, 255, 0.6);
+      background-color: transparent;
+      text-align: right;
+      text-shadow: 0 0 8px rgba(255,255,255, 1),
+                   0 0 15px rgba(255, 255,255, 0.7);
     }
 
     h1, h2 {
@@ -111,17 +114,28 @@
       bottom: 30px;
       right: 30px;
       z-index: 4;
-      height: 70px;
+      height: 40px;
       width: 120px;
       background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    #applybutton:hover {
+      background-color: #6b6b6b;
+      color: white;
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
     }
 
     #layerSelector {
+      display: none;
       position: absolute;
-      bottom: 30px;
+      top: 30px;
       left: 30px;
+      max-width: 40%;
       z-index: 4;
       background-color: rgb(255, 255, 255, 0.6);
+      padding: 10px;
     }
   </style>
 </head>
@@ -147,7 +161,7 @@
 
   <div class="viewDiv" id="viewDiv2">
     <div id="layerSelector">
-      <h2>View Results by Type</h2>
+      <h3>View Results by Type</h3>
       <input type="radio" id="viewall" name="layer" value="viewall">
       <label for="viewall">View All</label><br>
       <input type="radio" id="employment" name="layer" value="employment">
@@ -371,6 +385,7 @@
       document.getElementById("applyButton").addEventListener("click", function() {
         const mapview1 = document.getElementById("viewDiv1");
         const mapview2 = document.getElementById("viewDiv2");
+        const layerSelector = document.getElementById("layerSelector");
 
         if (pendingChanges.length === 0) {
           console.log("No changes to apply.");
@@ -394,6 +409,8 @@
 
         mapview2.style.zIndex = 3;
         mapview2.style.pointerEvents = "auto";
+        layerSelector.style.display = "block";
+
         map2.add(taxlotLayer);
         map2.add(ugbLayer);
         map2.add(expansionLayer);
@@ -628,6 +645,9 @@
           }
         });
       });
+
+      view.ui.move("zoom", "bottom-left");
+      view2.ui.move("zoom", "bottom-left");
     });
     
   </script>

@@ -35,6 +35,7 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin-top: 20px;
+    margin-bottom: 20px;
     flex-grow: 1;
 }
 
@@ -99,12 +100,17 @@ body {
     font-size: 0.7em;
 }
 
+#extra-comment-box {
+    display: none;
+}
+
 #extraComment {
     width: 100%;
     height: 100px;
 }
 
 #commentSubmit {
+    display: none;
     margin-top: 10px;
     padding: 10px;
     width: 200px;
@@ -114,10 +120,6 @@ body {
     border-radius: 4px;
     color:white;
     margin-bottom: 20px;
-}
-
-#commentSubmit:hover {
-    background-color: #c5e4fa;
 }
 
 .modal {
