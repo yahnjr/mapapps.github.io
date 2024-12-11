@@ -39,8 +39,8 @@
       padding: 10px;
       border: 1px solid #ddd;
       z-index: 1;
-      max-width: 300px;
-      height: 200px;
+      max-width: 350px;
+      height: auto;
       font-size: 11px;
     }
     
@@ -129,7 +129,7 @@
   <h1 id="banner">North Plains UGB Re-Look</h1>
   <div class="viewDiv" id="viewDiv1">
     <div class="welcome-box">
-      <p>Welcome! Please select an expansion type ("Employment" or "Housing") for each parcel in the expansion area. When you are satisfied with your selections, click "Submit Changes" to see how others have been weighing in on North Plains' expansion.</p>
+      <p>Welcome! Please click on a tax lot or group of tax lots within the study area on the map and indicate what land use you envision for that site: “Housing,” “Employment,” or “No Development.” When you have completed your selections, click "Submit Changes" to see how other community members have commented on potential UGB expansion.</p>
       <span class="close-button" onclick="document.querySelector('.welcome-box').style.display = 'none'">x</span>
     </div>
     <button id="applyButton" class="info-button">Submit Changes</button>
@@ -293,14 +293,11 @@
           var dropdown = document.getElementById("dropdown");
           var results = response.results;
 
-          if (results.length > 0 && results[0].graphic) {
-            var graphicLayer = results[0].graphic.layer;
-
+          if (results.length > 0) {
             var geojsonResult = results.find(result => result.graphic.layer === geojsonLayer);
 
-            if (graphicLayer === geojsonLayer) {
-              selectedFeature = results[0].graphic;
-
+            if (geojsonResult) {
+              selectedFeature = geojsonResult.graphic;
 
               dropdown.innerHTML = `
                 <h3>Development Type:</h3>
@@ -313,8 +310,14 @@
               dropdown.style.flexDirection = "column";
               dropdown.style.top = event.y + "px";
               dropdown.style.left = event.x + "px";
+            } else {
+              console.log("No GeoJSON feature found in hit test.");
             }
+          } else {
+            console.log("No features detected in hit test.");
           }
+        }).catch(function(error) {
+          console.error("Error during hit test:", error);
         });
       });
 
@@ -482,7 +485,7 @@
           type: "simple",
           symbol: {
             type: "simple-fill",
-            color: [255, 255, 0, 0.6], 
+            color: [255, 255, 0, 0.8], 
             outline: {
               color: [128, 128, 128, 0.5],
               width: 1
@@ -497,7 +500,7 @@
               },
               stops: [
                 { value: 0, color: [255, 255, 0, 0] },
-                { value: 10, color: [255, 255, 0, 0.6] }
+                { value: 10, color: [255, 255, 0, 0.8] }
               ]
             }
           ]
@@ -540,7 +543,7 @@
           type: "simple",
           symbol: {
             type: "simple-fill",
-            color: [255, 0, 0, 0.6],
+            color: [255, 0, 0, 0.8],
             outline: {
               color: [128, 128, 128, 0.5],
               width: 1
@@ -555,7 +558,7 @@
               },
               stops: [
                 { value: 0, color: [0, 0, 255, 0] },
-                { value: 10, color: [0, 0, 255, 0.6] }
+                { value: 10, color: [0, 0, 255, 0.8] }
               ]
             }
           ]
@@ -570,12 +573,12 @@
 
         housingLayer.renderer.visualVariables[0].stops = [
           { value: 0, color: [255, 255, 0, 0] }, 
-          { value: maxHousing, color: [255, 255, 0, 0.6] }
+          { value: maxHousing, color: [255, 255, 0, 0.8] }
         ];
 
         employmentLayer.renderer.visualVariables[0].stops = [
           { value: 0, color: [0, 0, 255, 0] }, 
-          { value: maxEmployment, color: [0, 0, 255, 0.6] }
+          { value: maxEmployment, color: [0, 0, 255, 0.8] }
         ];
         
         nodevLayer.renderer.visualVariables[0].stops = [
