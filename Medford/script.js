@@ -26,7 +26,6 @@ require([
 
     topicsDropdown.addEventListener('change', () => {
         selectedValue = topicsDropdown.value;
-        console.log(selectedValue);
         return selectedValue;
     })
 

@@ -205,7 +205,7 @@
                 ymin: 45.582,
                 xmax: -122.95,
                 ymax: 45.617,
-            spatialReference: { wkid: 4326 }
+                spatialReference: { wkid: 4326 }
             }
       });
 
@@ -561,8 +561,8 @@
                 title: "No Development"
               },
               stops: [
-                { value: 0, color: [150, 150, 150, 0] },
-                { value: 10, color: [150, 150, 150, 0.8] }
+                { value: 0, color: [30, 30, 30, 0] },
+                { value: 10, color: [30, 30, 30, 0.9] }
               ]
             }
           ]
@@ -615,8 +615,8 @@
         ];
         
         nodevLayer.renderer.visualVariables[0].stops = [
-          { value: 0, color: [150, 150, 150, 0] }, 
-          { value: maxNoDev, color: [150, 150, 150, 0.8] }
+          { value: 0, color: [30, 30, 30, 0] }, 
+          { value: maxNoDev, color: [30, 30, 30, 0.9] }
         ];
 
         housingLayer.refresh();
