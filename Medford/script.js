@@ -271,7 +271,6 @@ require([
         }
 
         document.getElementById("extra-comment-box").style.display = 'block';
-        document.getElementById("commentSubmit").style.display = 'block';
         document.getElementById("submitBtn").style.display = 'none';
         document.getElementById("cancelBtn").style.display = 'none';
         document.getElementById("buttons-box").innerHTML = '<h3>Map comments submitted, thank you!</h3>';
