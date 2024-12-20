@@ -16,18 +16,49 @@ require([
     });
 
     let selectedValue = 'None';
+    let selectedSubcat = 'None';
     let addPointHandler;
 
     const commentModal = document.getElementById("commentModal");
     const commentField = document.getElementById("commentField");
     const submitComment = document.getElementById("submitComment");
     const cancelComment = document.getElementById("cancelComment");
-    const topicsDropdown = document.getElementById("topicsDropdown");
+    const categoryDropdown = document.getElementById("categoryDropdown");
+    const infrastructureDropdown = document.getElementById("infrastructureDropdown");
+    const behaviorDropdown = document.getElementById("behaviorDropdown");
 
-    topicsDropdown.addEventListener('change', () => {
-        selectedValue = topicsDropdown.value;
+    categoryDropdown.addEventListener('change', () => {
+        selectedValue = categoryDropdown.value;
+        console.log("Category selected: ", selectedValue);
+
+        if (selectedValue === "Infrastructure") {
+            infrastructureDropdown.style.display = "block";
+            behaviorDropdown.style.display = "none";
+            selectedSubcat = infrastructureDropdown.value;
+        } else if (selectedValue === "Behavior") {
+            behaviorDropdown.style.display = "block";
+            infrastructureDropdown.style.display = "none";
+            selectedSubcat = behaviorDropdown.value;
+        } else {
+            behaviorDropdown.style.display = "none";
+            infrastructureDropdown.style.display = "none";
+            selectedSubcat = "None";
+        }
         return selectedValue;
-    })
+    });
+
+    infrastructureDropdown.addEventListener('change', () => {
+        selectedSubcat = infrastructureDropdown.value;
+        console.log("Infrastructure category selected: ", selectedSubcat);
+        return selectedSubcat;
+    });
+
+    behaviorDropdown.addEventListener('change', () => {
+        selectedSubcat = behaviorDropdown.value;
+        console.log("Behavior category selected: ", selectedSubcat);
+
+        return selectedSubcat;
+    });
 
     var view = new MapView({
         container: "viewDiv",
@@ -90,8 +121,9 @@ require([
         outFields: ["*"],
         editable: true,
         popupTemplate: {
-            title: `{type}`,
+            title: `Map comment`,
             content: `
+            <b>{category}: </b>{subcategory} <br>
             <b>Comment: </b> {comment}
             `
         }
@@ -104,69 +136,24 @@ require([
 
     var renderer = {
         type: "unique-value",
-        field: "type",
+        field: "category",
         uniqueValueInfos: [
             {
-            value: "Near Miss",
+            value: "Infrastructure",
             symbol: {
                 type: "simple-marker",
-                color: "#0D47A1", // Dark Blue
+                color: "#6ef07b", // Green
                 size: 8,
-                outline: { color: "white", width: 1 }
+                outline: { color: "white", width: 0.7 }
             }
             },
             {
-            value: "Not Enough Separation",
+            value: "Behavior",
             symbol: {
                 type: "simple-marker",
-                color: "#1E88E5", // Blue
+                color: "#5ef2eb", // Blue
                 size: 8,
-                outline: { color: "white", width: 1 }
-            }
-            },
-            {
-            value: "Distracted Driving",
-            symbol: {
-                type: "simple-marker",
-                color: "#00ACC1", // Cyan
-                size: 8,
-                outline: { color: "white", width: 1 }
-            }
-            },
-            {
-            value: "Insufficient Lighting",
-            symbol: {
-                type: "simple-marker",
-                color: "#26A69A", // Teal
-                size: 8,
-                outline: { color: "white", width: 1 }
-            }
-            },
-            {
-            value: "Speeding",
-            symbol: {
-                type: "simple-marker",
-                color: "#2E7D32", // Dark Green
-                size: 8,
-                outline: { color: "white", width: 1 }
-            }
-            },
-            {
-            value: "Line of Sight",
-            symbol: {
-                type: "simple-marker",
-                color: "#66BB6A", // Green
-                size: 8,
-                outline: { color: "white", width: 1 }
-            }
-            },
-            {
-            value: "Other",
-            symbol: {
-                type: "simple-marker",
-                color: "#9CCC65", // Light Green
-                size: 8,
-                outline: { color: "white", width: 1 }
+                outline: { color: "white", width: 0.7 }
             }
             }
         ]
@@ -204,13 +191,16 @@ require([
 
         window.currentTempPin = {
             geometry: point,
-            type: null,
+            category: null,
+            subcategory: null,
             comment: null
         }
     
         commentModal.style.display = 'block';
         commentField.value = '';        
-        topicsDropdown.selectedIndex = 0;
+        categoryDropdown.selectedIndex = 0;
+        infrastructureDropdown.selectedIndex = 0;
+        behaviorDropdown.selectedIndex = 0;
     });
     
     submitComment.addEventListener('click', function() {
@@ -218,7 +208,8 @@ require([
         var comment = commentField.value.trim();
         
         if (window.currentTempPin && selectedValue !== "") {
-            window.currentTempPin.type = selectedValue;
+            window.currentTempPin.category = selectedValue;
+            window.currentTempPin.subcategory = selectedSubcat;
             window.currentTempPin.comment = comment;
             
             console.log("Pin being added:", window.currentTempPin);
@@ -232,7 +223,7 @@ require([
     });
 
     document.getElementById("submitBtn").addEventListener("click", function() {
-        const validPins = tempPins.filter(pin => pin.geometry && pin.type);
+        const validPins = tempPins.filter(pin => pin.geometry && pin.category);
     
         if (validPins.length === 0) {
             alert("No valid pins to submit.");
@@ -248,7 +239,8 @@ require([
             var newGraphic = new Graphic({
                 geometry: pin.geometry,
                 attributes: {
-                    type: pin.type,
+                    category: pin.category,
+                    subcategory: pin.subcategory,
                     comment: pin.comment || ''
                 }
             });
@@ -303,7 +295,7 @@ require([
                     latitude: 0
                 },
                 attributes: {
-                    type: "Extra Comment",
+                    category: "Extra Comment",
                     comment: extraCommentText
                 }
             });

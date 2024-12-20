@@ -40,15 +40,33 @@
                 </div>
                 <div id="commentModal" class="modal">
                     <div class="modal-content">
-                        <select id="topicsDropdown" style="margin-bottom: 10px;">
-                            <option value="None">Select a Transportation Concern</option>
-                            <option value="Near Miss">Near Miss</option>
-                            <option value="Not Enough Separation">Not Enough Separation</option>
-                            <option value="Distracted Driving">Distracted Driving</option>
-                            <option value="Insufficient Lighting">Insufficient Lighting</option>
+                        <select id="categoryDropdown" class="dropdown" style="margin-bottom: 10px;">
+                            <option value="None">Select a Category:</option>
+                            <option value="Infrastructure">Infrastructure Concerns</option>
+                            <option value="Behavior">Behavior Concerns</option>
+                        </select>
+                        <select id="infrastructureDropdown" class="dropdown" style="margin-bottom: 10px; display: none;">
+                            <option value="None">Select an Infrastructure Concern</option>
+                            <option value="Congested intersection/roadway">Congested intersection/roadway</option>
+                            <option value="Frequent driveways/intersections">Frequent driveways/intersections</option>
+                            <option value="Parking/bus maneuvering conflicts">Parking/bus maneuvering conflicts</option>
+                            <option value="Sidewalk/bicycle gap">Sidewalk/bicycle gap</option>
+                            <option value="Lighting/visibility">Lighting/visibility</option>
+                            <option value="Obstructed sight lines">Obstructed sight lines</option>
+                            <option value="Poor pavement conditions">Poor pavelemtn conditions</option>
+                            <option value="Other (Specify)">Other (Specify)</option>
+                        </select>
+                        <select id="behaviorDropdown" class="dropdown" style="margin-bottom: 10px; display: none;">
+                            <option value="None">Select a Behavioral Concern</option>
                             <option value="Speeding">Speeding</option>
-                            <option value="Line of Sight">Line of Sight</option>
-                            <option value="Other">Other</option>
+                            <option value="Distracted driving (walking/biking)">Distracted driving (walking/biking)</option>
+                            <option value="Impaired driving (walking/biking)">Distracted driving (walking/biking)</option>
+                            <option value="Aggressive driving">Aggressive driving</option>
+                            <option value="Failing to yield">Failing to yield</option>
+                            <option value="Disregarding traffic control">Disregarding traffic control</option>
+                            <option value="Improper street crossing">Improper street crossing</option>
+                            <option value="Riding against traffic">Riding against traffic</option>
+                            <option value="Other">Other (Specify)</option>
                         </select>
                         <label>Add a Comment:</label>
                         <textarea id="commentField" rows="4" cols="50" placeholder="Type your comment here..."></textarea>
